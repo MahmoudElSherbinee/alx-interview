@@ -3,6 +3,7 @@
 0-0x00-pascal_triangle
 """
 
+
 def pascal_triangle(n):
     """
     a function def pascal_triangle(n): that returns
