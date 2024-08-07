@@ -15,17 +15,27 @@ def minOperations(n):
         Returns: int: The minimum number of operations required
             to perform the task.
     """
-    alphabet = "H"
-    operations = 1
-    current_string = alphabet
-    while len(current_string) < n:
-        if len(current_string) * 2 <= n:
-            current_string = current_string * 2
-            operations += 0
-        else:
-            if len(current_string) == n:
-                break
-        current_string += alphabet
-        operations += 1
-    # Disclaimer This Method doesn't work as expected
-    return operations
+    # checking if n is a number
+    if not isinstance(n, int):
+        return 0
+
+    ops_count = 0
+    clipboard = 0
+    done = 1
+    # print('H', end='')
+    while done < n:
+        if clipboard == 0:
+            # init (the first copy all and paste)
+            clipboard = done
+            done += clipboard
+            ops_count += 2
+        elif n - done > 0 and (n - done) % done == 0:
+            # copy all and paste
+            clipboard = done
+            done += clipboard
+            ops_count += 2
+        elif clipboard > 0:
+            # paste
+            done += clipboard
+            ops_count += 1
+    return ops_count
