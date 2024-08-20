@@ -1,41 +1,34 @@
 #!/usr/bin/python3
+
 """
-A method that determines if a given data set
-represents a valid UTF-8 encoding.
-
-Prototype: def validUTF8(data)
-Return: True if data is a valid UTF-8 encoding,
-        else return False
-
-A character in UTF-8 can be 1 to 4 bytes long
-The data set can contain multiple characters
-The data will be represented by a list of integers
-Each integer represents 1 byte of data, therefore you
-only need to handle the 8 least significant bits of
-each integer.
+Module for validate_utf8
 """
 
 
 def validUTF8(data):
     """
-    A function that validates
-    a dataset and check if the
-    dataset is UTF8
+    Determines if a given data set represents a valid UTF-8 encoding.
     """
-    data = iter(data)
-    for leading_byte in data:
-        leading_ones = count_leading_ones(leading_byte)
-        if leading_ones in [1, 7, 8]:
-            return False
-        for _ in range(leading_ones - 1):
-            trailing_byte = next(data, None)
-            if trailing_byte is None or trailing_byte >> 6 != 0b10:
+    n_bytes = 0
+
+    for num in data:
+        byte = format(num, '#010b')[-8:]
+
+        if n_bytes == 0:
+            for bit in byte:
+                if bit == '0':
+                    break
+                n_bytes += 1
+
+            if n_bytes == 0:
+                continue
+
+            if n_bytes == 1 or n_bytes > 4:
                 return False
-    return True
+        else:
+            if not (byte[0] == '1' and byte[1] == '0'):
+                return False
 
+        n_bytes -= 1
 
-def count_leading_ones(byte):
-    for i in range(8):
-        if byte >> (7 - i) == 0b11111111 >> (7 - i) & ~1:
-            return i
-    return 8
+    return n_bytes == 0
